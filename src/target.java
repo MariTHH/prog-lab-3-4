@@ -1,3 +1,3 @@
 public interface target {
-    public void target(Items item, Character character);
+    void target(Items item, Character character);
 }
