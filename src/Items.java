@@ -17,10 +17,21 @@ public enum Items {
     private String name;
     protected Location location;
     protected Personality personality;
-    Items(String name){this.name = name;}
-    public String getNameItem(){return name;}
 
-    public Location getLocation(Location location){return location;}
-    public Personality getPersonality(Personality personality){return personality;}
+    Items(String name) {
+        this.name = name;
+    }
+
+    public String getNameItem() {
+        return name;
+    }
+
+    public Location getLocation(Location location) {
+        return this.location = location;
+    }
+
+    public Personality getPersonality(Personality personality) {
+        return this.personality = personality;
+    }
 
 }
