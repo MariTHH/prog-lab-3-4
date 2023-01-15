@@ -5,10 +5,12 @@ public class Cat extends Character implements drop, target, toCatch {
 
     @Override
     public void drop(Items thing, Character character) {
-        if (thing == Items.primus) {
+        if (thing.equals(Items.primus) == true) {
             thing.getLocation(Location.side);
-            //this.location=Location.side;
             System.out.println(name + " отставив " + thing.location.getNamePlace() + " " + thing.getNameItem());
+        } else {
+            thing.getLocation(Location.floor);
+            System.out.println(thing.getNameItem() + " все еще там, где " + thing.location.getNamePlace());
         }
     }
 
