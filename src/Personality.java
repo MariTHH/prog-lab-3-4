@@ -17,8 +17,4 @@ public enum Personality {
     public String getNamePersonality() {
         return NamePersonality;
     }
-
-    public Personality getPersonality(Personality personality) {
-        return personality;
-    }
 }
