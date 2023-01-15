@@ -9,7 +9,16 @@ public enum Personality {
     broken("разбился");
 
     private String NamePersonality;
-    Personality(String name){this.NamePersonality=name;}
-    public String getNamePersonality(){return NamePersonality;}
-    public Personality getPersonality(Personality personality){return personality;}
+
+    Personality(String name) {
+        this.NamePersonality = name;
+    }
+
+    public String getNamePersonality() {
+        return NamePersonality;
+    }
+
+    public Personality getPersonality(Personality personality) {
+        return personality;
+    }
 }
