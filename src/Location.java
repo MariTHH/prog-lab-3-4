@@ -11,8 +11,18 @@ public enum Location {
     darkroom(" в затененной комнате");
 
     private String NamePlace;
-    Location(String name) {this.NamePlace=name;}
-    public String getNamePlace(){return NamePlace;}
-    public Personality getPersonality(Personality personality){return personality;}
+    protected Personality personality;
+
+    Location(String name) {
+        this.NamePlace = name;
+    }
+
+    public String getNamePlace() {
+        return NamePlace;
+    }
+
+    public Personality getPersonality(Personality personality) {
+        return this.personality = personality;
+    }
 
 }
