@@ -2,14 +2,16 @@ package classes;
 
 import enums.*;
 
+import java.util.Objects;
+
+
 public abstract class Character {
     protected String name;
     protected double health = 100;
     protected Personality personality;
-    public Location location;
+    protected Location location;
     protected Items item1;
-    protected Items item2;
-    protected Gender gender;
+    static Gender gender;
     protected Poses poses;
 
     public Character(String name, int health, Location location, Gender gender, Personality personality, Poses poses) {
@@ -76,6 +78,19 @@ public abstract class Character {
         return name + " вылечился";
     }
 
+
+    public String testcrowd(Character character, Character character2) {
+        if (character2.hashCode() == character.hashCode()) {
+            if (equals(character2) == equals(character)) {
+                return " they are npc and they are just a crowd";
+            }
+        } else {
+            return " they are main characters ";
+        }
+        return null;
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -85,6 +100,11 @@ public abstract class Character {
             return false;
         }
         Character character = (Character) obj;
-        return this.name.equals(character.name) && super.equals(obj);
+        return personality == character.personality && location == character.location && item1 == character.item1 && poses == character.poses;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(health, personality, location, item1, poses);
     }
 }
