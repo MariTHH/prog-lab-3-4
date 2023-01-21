@@ -11,7 +11,7 @@ public abstract class Character {
     protected Personality personality;
     protected Location location;
     protected Items item1;
-    static Gender gender;
+    protected final Gender gender;
     protected Poses poses;
 
     public Character(String name, int health, Location location, Gender gender, Personality personality, Poses poses) {
@@ -69,7 +69,7 @@ public abstract class Character {
         } else if (this.gender == Gender.human & (location == Location.cornice || location == Location.chandelier)) {
             Items.chandelier.personality = Personality.broken;
             this.health = health - Math.round(Math.random() * 90);
-            System.out.println(name + " прыгнул и " + Items.chandelier.getNameItem() + Items.chandelier.personality.getNamePersonality());
+            System.out.println(name + " прыгнул и " + Items.chandelier.getNameItem() + " " + Items.chandelier.personality.getNamePersonality());
         }
     }
 
