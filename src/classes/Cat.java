@@ -1,7 +1,9 @@
 package classes;
 
+import exceptions.ChangeHealthException;
 import interfaces.*;
 import enums.*;
+
 
 public class Cat extends Character implements Drop, Target, ToCatch {
     public Cat() {
@@ -10,40 +12,48 @@ public class Cat extends Character implements Drop, Target, ToCatch {
 
     @Override
     public void drop(Items thing, Character character) {
-        if (thing.equals(Items.primus) == true) {
-            thing.getLocation(Location.side);
-            System.out.println(name + " отставил " + thing.location.getNamePlace() + " " + thing.getNameItem());
+        if (thing.hashCode() == Items.primus.hashCode()) {
+            if (thing.equals(Items.primus)) {
+                thing.getLocation(Location.side);
+                System.out.println(name + " отставил " + thing.location.getNamePlace() + " " + thing.getNameItem());
+            }
         } else {
             thing.getLocation(Location.floor);
             System.out.println(thing.getNameItem() + " все еще там, где " + thing.location.getNamePlace());
         }
+
     }
 
     @Override
     public void shoot(Character character) {
-        if (character.personality == Personality.atRisk) {
-            if (character.health == 0) {
-                System.out.println(name + " застрелил " + character.getName() + ". ");
+        if (character.personality.hashCode() == Personality.atRisk.hashCode()) {
+            if (character.personality.equals(Personality.atRisk)) {
+                if (character.health == 0) {
+                    System.out.println(name + " застрелил " + character.getName() + ". ");
+                } else {
+                    System.out.println(name + " выстрелил, но " + character.getName() + " успел увернуться ");
+                }
             } else {
-                System.out.println(name + " выстрелил, но " + character.getName() + " успел увернуться ");
+                Items.debris.location = Location.floor;
+                Items.mirror.personality = Personality.broken;
+                Items.dust.location = Location.floor;
+                Items.sleeve.location = Location.floor;
+                Items.glass.personality = Personality.broken;
+                Items.petrol.location = Location.floor;
+                System.out.println(name + " стреляет, разбивая " + Items.mirror.getNameItem() + " " + Items.glass.getNameItem());
             }
-        } else {
-            Items.debris.location = Location.floor;
-            Items.mirror.personality = Personality.broken;
-            Items.dust.location = Location.floor;
-            Items.sleeve.location = Location.floor;
-            Items.glass.personality = Personality.broken;
-            Items.petrol.location = Location.floor;
-            System.out.println(name + " стреляет, разбивая " + Items.mirror.getNameItem() + " " + Items.glass.getNameItem());
         }
     }
 
     @Override
-    public void fallDown() {
+    public void fallDown() throws ChangeHealthException {
         if (this.location == Location.mantel & (Items.browning.personality == Personality.pointAt || Items.mauser.personality == Personality.pointAt)) {
             this.poses = Poses.upsideDown;
             this.location = Location.floor;
             this.health = health - Math.round(Math.random() * 20);
+            if (this.health < 0) {
+                throw new ChangeHealthException("Error");
+            }
             Items.browning.location = Location.floor;
             Items.primus.location = Location.floor;
             System.out.println(name + " " + this.poses.getNamePoses() + " шлепнулся на " + this.location.getNamePlace());
@@ -60,15 +70,27 @@ public class Cat extends Character implements Drop, Target, ToCatch {
         return name + " посмотрел на " + item.getNameItem();
     }
 
-    public void drink(Items drink) {
+    public void drink(Items drink) throws ChangeHealthException {
         if (drink == Items.petrol) {
             System.out.println(name + " выпил " + drink.getNameItem());
             double index = Math.random() * 100;
-            health = health - Math.round(index);
+            health = (int) (health - Math.round(index));
+            if (this.health < 0) {
+                throw new ChangeHealthException("Здоровье не может быть отрицателен");
+            }
             System.out.println(Math.round(health) + " изменилось на " + Math.round(index));
         } else {
-            health = health;
+            System.out.println(this.health + " не изменилось");
         }
+    }
+
+    public String blow(Items items) {
+        return this.getName() + " подул на " + items.getNameItem();
+    }
+
+    public String spat(Items items) {
+        items.getPersonality(Personality.wet);
+        return this.getName() + " плюнул на " + items.getNameItem() + " теперь " + Personality.wet.getNamePersonality();
     }
 
     @Override
@@ -87,3 +109,4 @@ public class Cat extends Character implements Drop, Target, ToCatch {
         System.out.println(character.getName() + " " + character.personality.getNamePersonality());
     }
 }
+
