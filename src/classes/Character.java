@@ -1,6 +1,8 @@
 package classes;
 
 import enums.*;
+import exceptions.ChangeHealthException;
+import exceptions.IllogicalLocationException;
 
 import java.util.Objects;
 
@@ -38,6 +40,21 @@ public abstract class Character {
 
 
     public void shoot(Character character) {
+        // локальный класс
+        class Shooting {
+            final String shooting = "стрельба";
+
+            public void start() {
+                System.out.println(shooting + " началась");
+            }
+
+            public void end() {
+                System.out.println(shooting + " закончилась");
+            }
+
+        }
+        Shooting shooting = new Shooting();
+        shooting.start();
         if (character.personality == Personality.atRisk) {
             if (character.health == 0) {
                 System.out.println(name + " застрелил " + character.getName() + ". ");
@@ -52,23 +69,46 @@ public abstract class Character {
             Items.glass.personality = Personality.broken;
             Items.petrol.location = Location.floor;
         }
+        shooting.end();
     }
 
-    public void fallDown() {
-        if (this.location == Location.mantel) {
-            this.location = Location.floor;
-            this.health = health - Math.round(Math.random() * 20);
-            System.out.println(name + " шлепнулся на " + this.location.getNamePlace());
+    // статический вложенный класс
+    public static class Safety {
+        public void keep() {
+            String safety = "безопасность";
+            System.out.println("обеспечена " + safety);
         }
     }
 
-    public void jumpTo(Location location) {
+    public void keepSafe() {
+        Safety safety = new Safety();
+        safety.keep();
+        System.out.println("для " + this.name);
+    }
+
+    public void fallDown() throws IllogicalLocationException, ChangeHealthException {
+        if (this.location == Location.mantel) {
+            this.location = Location.floor;
+            this.health = health - Math.round(Math.random() * 20);
+            if (this.health < 0) {
+                throw new ChangeHealthException("Здоровье не может быть отрицателен");
+            }
+            System.out.println(name + " шлепнулся на " + this.location.getNamePlace());
+        } else if (this.location == Location.pocket) {
+            throw new IllogicalLocationException("Животному или человеку невозможно упасть в карман");
+        }
+    }
+
+    public void jumpTo(Location location) throws ChangeHealthException {
         if (this.gender == Gender.animal) {
             this.location = location;
             System.out.println(name + " прыгнул на " + this.location.getNamePlace());
         } else if (this.gender == Gender.human & (location == Location.cornice || location == Location.chandelier)) {
             Items.chandelier.personality = Personality.broken;
             this.health = health - Math.round(Math.random() * 90);
+            if (this.health < 0) {
+                throw new ChangeHealthException("Error");
+            }
             System.out.println(name + " прыгнул и " + Items.chandelier.getNameItem() + " " + Items.chandelier.personality.getNamePersonality());
         }
     }
@@ -78,6 +118,13 @@ public abstract class Character {
         return name + " вылечился";
     }
 
+    public void testforhealth() throws ChangeHealthException {
+        this.health = this.health - 101;
+        System.out.println(name + " здоровье меньше 0");
+        if (this.health < 0) {
+            throw new ChangeHealthException("Error");
+        }
+    }
 
     public String testcrowd(Character character, Character character2) {
         if (character2.hashCode() == character.hashCode()) {
@@ -89,7 +136,6 @@ public abstract class Character {
         }
         return null;
     }
-
 
     @Override
     public boolean equals(Object obj) {
